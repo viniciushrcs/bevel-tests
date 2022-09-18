@@ -45,7 +45,6 @@
     --path={{ git_path }} \
     --private-key-file={{ git_key }} \
     --namespace=flux-{{ network.env.type }}
-    --gpg-passphrase=personalssh
   when: git_protocol == "ssh"
   environment:
     KUBECONFIG: "{{ item.k8s.config_file }}"
