@@ -1,0 +1,38 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: supplychain-vaultkubenertes-job
+  namespace: supplychain-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  interval: 1m
+  releaseName: supplychain-vaultkubenertes-job
+  chart:
+    spec:
+      interval: 1m
+      sourceRef:
+        kind: GitRepository
+        name: flux-demo-fabric
+        namespace: flux-demo-fabric
+      chart: platforms/hyperledger-fabric/charts/vault_kubernetes
+  values:
+    metadata:
+      name: supplychain
+      component_type: orderer
+      namespace: supplychain-net    
+      images:
+        alpineutils: ghcr.io/hyperledger/alpine-utils:1.0
+
+    vault:
+      reviewer_service: vault-reviewer
+      role: vault-role
+      address: http://a512e00204ace430bb7a6f6e15a9fb56-1690181827.us-east-1.elb.amazonaws.com:8200
+      authpath: demo-fabricsupplychain-net-auth
+      policy: vault-crypto-orderer-supplychain-net-ro
+      secret_path: secretsv2
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+    
+    k8s:
+      kubernetes_url: https://0A65839C15EFF73CBEAF4739C3A94C64.sk1.us-east-1.eks.amazonaws.com
